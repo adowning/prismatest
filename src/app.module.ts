@@ -5,14 +5,19 @@ import { AppService } from './services/app.service';
 import { AuthModule } from './resolvers/auth/auth.module';
 import { UserModule } from './resolvers/user/user.module';
 import { PostModule } from './resolvers/post/post.module';
+import { WorkorderModule } from './resolvers/workorder/workorder.module';
 import { AppResolver } from './resolvers/app.resolver';
 import { DateScalar } from './common/scalars/date.scalar';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import config from './configs/config';
 import { GraphqlConfig } from './configs/config.interface';
+import { AccountModule } from './resolvers/account/account.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
+
     ConfigModule.forRoot({ isGlobal: true, load: [config] }),
     GraphQLModule.forRootAsync({
       useFactory: async (configService: ConfigService) => {
@@ -34,6 +39,8 @@ import { GraphqlConfig } from './configs/config.interface';
     AuthModule,
     UserModule,
     PostModule,
+    WorkorderModule,
+    AccountModule,
   ],
   controllers: [AppController],
   providers: [AppService, AppResolver, DateScalar],

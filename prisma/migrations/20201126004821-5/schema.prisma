@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  email     String    @unique
+  password  String
+  firstname String?
+  lastname  String?
+  role      Role
+  Comment   Comment[]
+  posts     Post[]
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  published Boolean
+  title     String
+  content   String?
+  authorId  String?
+  author    User?    @relation(fields: [authorId], references: [id])
+}
+
+model Comment {
+  id          String     @id @default(cuid())
+  createdAt   DateTime   @default(now())
+  authorId    String?
+  workorderId String?
+  author      User?      @relation(fields: [authorId], references: [id])
+  Workorder   Workorder? @relation(fields: [workorderId], references: [id])
+}
+
+model Workorder {
+  id                String     @id @default(cuid())
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  imported          Boolean?
+  orderID           String
+  accountID         String
+  accountName       String
+  address1          String?
+  city              String?
+  state             String?
+  zip               Int?
+  companyID         String?
+  correction        Int?
+  createdBy         String?
+  createdOn         DateTime?
+  dateCreated       DateTime?
+  balanceDue        Int?
+  grandTotal        Int?
+  orderNumber       Int
+  orderType         OrderType?
+  originalType      OrderType?
+  postToAccounting  Boolean?
+  salesRepID        String?
+  siteID            String?
+  subTotal          Int?
+  taxID             String?
+  taxRate           Int?
+  taxTotal          Int?
+  userName          String?
+  merchantFeesTotal Int?
+  refNumber         String?
+  comments          Comment[]
+}
+
+model Account {
+  id                      String    @id @default(cuid())
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  acquisitionDate         DateTime?
+  accountName             String?
+  alert                   Boolean?
+  address2                String?
+  commercial              Boolean?
+  city                    String?
+  accountID               String?
+  companyID               String?
+  companyName             String?
+  email                   String?
+  firstName               String?
+  lastName                String?
+  state                   String?
+  taxExempt               Boolean?
+  taxID                   String?
+  zip                     String?
+  phone1                  String?
+  lastInvoiceDate         DateTime?
+  averageInvoice          Float?
+  invoiceCount            Float?
+  lastEstimateCreatedDate String?
+  lastInvoiceAmount       Float?
+  searchAddress           String?
+  lastJobAmount           Float?
+  lat                     Float?
+  lng                     Float?
+  placeid                 String?
+  formatted_address       String?
+  phone2                  String?
+  phone3                  String?
+}
+
+enum OrderType {
+  ESTIMATE
+  INVOICE
+  VOIDED
+  WORKORER
+}
+
+enum Role {
+  ADMIN
+  USER
+}
